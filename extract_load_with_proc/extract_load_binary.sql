@@ -1,4 +1,21 @@
 --extract binary
+drop proc if exists dba.extract_data_binary_shell;
+create or replace procedure dba.extract_data_binary_shell( in owner varchar(256), in tbl varchar(256),in dir varchar(1024) )
+begin
+  declare @dt datetime;
+  declare cnt bigint;
+  execute immediate 'select count(*) into cnt from '+owner+'.'+tbl+';';
+message '---------------------------------------------------' to client;
+message '-- Extract Table '+owner+'.'+tbl to client;
+message '-- Number or rows to be extracted for '+owner+'.'+tbl to client;
+set @dt=getdate();
+  call dba.extract_data_binary( owner, tbl, dir );
+message '-- Extraction Duration for '+owner+'.'+tbl+'(sec): '+convert(varchar(10), datediff(ss,@dt,getdate())) to client;
+message '---------------------------------------------------' to client;
+end;
+
+
+
 drop proc if exists dba.extract_data_binary;
 create procedure dba.extract_data_binary( in owner varchar(256), in tbl varchar(256),in dir varchar(1024) )
 begin
@@ -92,7 +109,7 @@ begin
   select result                                                                                                                                                                                                                                                  
 end;                   
 
-call write_load_binary('DBA','k','C:\Temp\k','DBA.Actions.txt')
+call write_load_binary('DBA','k','C:\Temp\k','DBA.Actions.txt');
 
 
 
@@ -102,6 +119,7 @@ call write_load_binary('DBA','k','C:\Temp\k','DBA.Actions.txt')
 create or replace proc load_table_binary(owner varchar(256),tbl varchar(256),iq_export_dir varchar(1024),filename varchar(1024), out res varchar(20000))
 begin
 declare @dt datetime;
+declare cnt int;
 DECLARE path_delimiter CHAR(1) ;
 DECLARE platform varchar(20) ;
 SELECT Value INTO platform from  sa_eng_properties() where PropName='Platform';
@@ -110,7 +128,7 @@ WHEN 'win' THEN  '\'
 ELSE '/'
 END into path_delimiter;   
 message '---------------------------------------------------' to client;
-message '---- Load Table '+owner+'.'+tbl+' --------' to client;
+message '-- Load Table '+owner+'.'+tbl to client;
 select 'truncate table '+Table_owner+'.'+Table_name+';'+
 'LOAD TABLE '+Table_owner+'.'+Table_name+'('+col_list_binary(Table_owner,Table_name)+')'                                                                                                                                                                
     +'FROM '+"char"(39)+iq_export_dir+path_delimiter+filename+"char"(39)+"char"(10)                                                                                                                                                                                        
@@ -127,12 +145,14 @@ where  Table_owner=owner and
 Table_name =tbl;
 set @dt=getdate();
 execute immediate  res;
-message 'Load Duration for '+owner+'.'+tbl+'(sec): '+convert(varchar(10), datediff(ss,@dt,getdate())) to client;
+set cnt=@@rowcount;
+message '-- Number of rows loaded in '+owner+'.'+tbl+': '+convert(varchar(30), cnt) to client;
+message '-- Load Duration for '+owner+'.'+tbl+'(sec): '+convert(varchar(10), datediff(ss,@dt,getdate())) to client;
 message '---------------------------------------------------' to client;
 end;  
 
  
-call load_table_binary('DBA','k','C:\Temp\k','DBA.Actions.txt')
+call load_table_binary('DBA','k','C:\Temp\k','DBA.Actions.txt');
 
 
 
