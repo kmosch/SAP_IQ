@@ -16,7 +16,7 @@ end;
 
 
 -- unset options 
-create or replace proc unset_options()
+create or replace proc dba.unset_options()
 begin
   set temporary option Temp_Extract_Name1 ='';
   set temporary option Temp_Extract_Directory='';
@@ -30,7 +30,7 @@ call unset_options();
 
 --column list for binary load 
 drop proc if exists "DBA"."col_list_binary";
-create FUNCTION "DBA"."col_list_binary" (@table_owner varchar(100),@table_name varchar(100))
+create FUNCTION "dba"."col_list_binary" (@table_owner varchar(100),@table_name varchar(100))
 returns varchar(32000)    
 as
       declare @column_list varchar(32000),  
