@@ -1,25 +1,16 @@
---extract binary
-drop proc if exists dba.extract_data_binary_shell;
-create or replace procedure dba.extract_data_binary_shell( in owner varchar(256), in tbl varchar(256),in dir varchar(1024) )
+-- extract binary
+-- in gui onteractive SQL it requires both "Show reults foa all statements" and "Show all result sets"
+drop proc if exists dba.extract_data_binary;
+create or replace procedure dba.extract_data_binary( in owner varchar(256), in tbl varchar(256),in dir varchar(1024) )
 begin
+  declare str varchar(1024);
   declare @dt datetime;
   declare cnt bigint;
   execute immediate 'select count(*) into cnt from '+owner+'.'+tbl+';';
-message '---------------------------------------------------' to client;
-message '-- Extract Table '+owner+'.'+tbl to client;
-message '-- Number or rows to be extracted for '+owner+'.'+tbl to client;
-set @dt=getdate();
-  call dba.extract_data_binary( owner, tbl, dir );
-message '-- Extraction Duration for '+owner+'.'+tbl+'(sec): '+convert(varchar(10), datediff(ss,@dt,getdate())) to client;
-message '---------------------------------------------------' to client;
-end;
-
-
-
-drop proc if exists dba.extract_data_binary;
-create procedure dba.extract_data_binary( in owner varchar(256), in tbl varchar(256),in dir varchar(1024) )
-begin
-  declare str varchar(1024);
+  message '---------------------------------------------------' to client;
+  message '-- Extract Table '+owner+'.'+tbl to client;
+  message '-- Number or rows to be extracted for '+owner+'.'+tbl+' : '+convert(varchar(20),cnt) to client;
+  set @dt=getdate();
   set str = 'set temporary option Temp_Extract_Directory='+"char"(39)+dir+"char"(39)+';';
   execute immediate str;
   set str = 'set temporary option Temp_Extract_Name1='+"char"(39)++owner+'.'+tbl+'.txt'+"char"(39)+';';
@@ -29,21 +20,15 @@ begin
   execute immediate str;
   set str = 'select * from '+owner+'.'+tbl+';';
   execute immediate with result set on str;
-end;
-
-
--- unset options 
-create or replace proc dba.unset_options()
-begin
   set temporary option Temp_Extract_Name1 ='';
   set temporary option Temp_Extract_Directory='';
   set temporary option Temp_Extract_Binary = 'OFF';
+  message '-- Extraction Duration for '+owner+'.'+tbl+'(sec): '+convert(varchar(10), datediff(ss,@dt,getdate())) to client;
+  message '---------------------------------------------------' to client;
 end;
 
 -- example for execution
 call extract_data_binary('DBA','k','C:\Temp\k')
-call unset_options();
-
 
 --column list for binary load 
 drop proc if exists "DBA"."col_list_binary";
