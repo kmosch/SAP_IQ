@@ -13,7 +13,7 @@ There are 3 sets of procedures
   c) function dba.col_list_binary to return the column list for the load command
   d) procedure dba.load_table_binary which loads a table from a file
   e) procedure dba.write_load_binary which returns the load command executed by dba.load_table_binary, used for debugging
-2) export/import as text (extract_data.sql)
+2) export/import as text (extract_load_data_as_text.sql)
   a) procedure dba.extract_data to export a table in file as text
   b) procedure dba.unset_options to unset the options set by dba.extract_data
   c) function dba.col_list to return the column list for the load command
