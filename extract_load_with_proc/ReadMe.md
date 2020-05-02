@@ -21,4 +21,4 @@ There are 3 sets of procedures
   - function dba.col_list_bcp to return the column list for the load command
   - procedure dba.load_table_bcp which loads a table from a file
   - procedure dba.write_load_bcp which returns the load command executed by dba.load_table_bcp, used for debugging
-  - 
+  
