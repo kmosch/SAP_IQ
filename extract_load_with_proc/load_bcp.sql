@@ -1,4 +1,4 @@
-﻿--extract bcp file from ASE this means that the last column has both delimiters
+﻿--extract bcp file from ASE this means that the last column has only row delimiters
 
 
 drop proc if exists "DBA"."col_list_bcp";
@@ -64,7 +64,7 @@ end;
 -- call write_load_bcp('dba','STG_cr__comast','/sybdata/mis/iapply_export', 'STG_cr__comast.bcp','|#|','!@#')
 
 -- load proc
-create or replace proc load_table(owner varchar(256),tbl varchar(256),iq_export_dir varchar(1024),filename varchar(1024),col_delimiter VARCHAR(4),row_delimiter varchar(4), out res varchar(20000))
+create or replace proc load_table_bcp(owner varchar(256),tbl varchar(256),iq_export_dir varchar(1024),filename varchar(1024),col_delimiter VARCHAR(4),row_delimiter varchar(4), out res varchar(20000))
 begin
 declare @dt datetime;
 declare cnt int;
@@ -101,4 +101,4 @@ message '---------------------------------------------------' to client;
 end;
 
  
--- call load_table('dba','STG_cr__comast','/sybdata/mis/iapply_export', 'STG_cr__comast.bcp','|#|','!@#')
+-- call load_table_bcp('dba','STG_cr__comast','/sybdata/mis/iapply_export', 'STG_cr__comast.bcp','|#|','!@#')
