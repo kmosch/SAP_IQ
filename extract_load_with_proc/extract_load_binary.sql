@@ -1,5 +1,6 @@
 -- extract binary
 -- in gui onteractive SQL it requires both "Show reults foa all statements" and "Show all result sets"
+
 drop proc if exists dba.extract_data_binary;
 create or replace procedure dba.extract_data_binary( in owner varchar(256), in tbl varchar(256),in dir varchar(1024) )
 begin
@@ -11,12 +12,12 @@ begin
   message '-- Extract Table '+owner+'.'+tbl to client;
   message '-- Number or rows to be extracted for '+owner+'.'+tbl+' : '+convert(varchar(20),cnt) to client;
   set @dt=getdate();
-  set str = 'set temporary option Temp_Extract_Directory='+"char"(39)+dir+"char"(39)+';';
+  set str = 'set temporary option Temp_Extract_Directory='+char(39)+dir+char(39)+';';
   execute immediate str;
-  set str = 'set temporary option Temp_Extract_Name1='+"char"(39)++owner+'.'+tbl+'.txt'+"char"(39)+';';
+  set str = 'set temporary option Temp_Extract_Name1='+char(39)++owner+'.'+tbl+'.txt'+char(39)+';';
   execute immediate with result set on str;
   set temporary option Temp_Extract_Binary = 'on';
-  set str = 'set temporary option Temp_Extract_Directory='+"char"(39)+dir+"char"(39)+';';
+  set str = 'set temporary option Temp_Extract_Directory='+char(39)+dir+char(39)+';';
   execute immediate str;
   set str = 'select * from '+owner+'.'+tbl+';';
   execute immediate with result set on str;
@@ -94,11 +95,7 @@ begin
   select result                                                                                                                                                                                                                                                  
 end;                   
 
-call write_load_binary('DBA','k','C:\Temp\k','DBA.Actions.txt');
-
-
-
-
+-- call write_load_binary('DBA','k','C:\Temp\k','DBA.Actions.txt');
 
 -- load proc
 create or replace proc load_table_binary(owner varchar(256),tbl varchar(256),iq_export_dir varchar(1024),filename varchar(1024), out res varchar(20000))
@@ -137,7 +134,7 @@ message '---------------------------------------------------' to client;
 end;  
 
  
-call load_table_binary('DBA','k','C:\Temp\k','DBA.Actions.txt');
+-- call load_table_binary('DBA','k','C:\Temp\k','DBA.Actions.txt');
 
 
 

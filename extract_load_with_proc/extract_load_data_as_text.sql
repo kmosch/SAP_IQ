@@ -1,3 +1,6 @@
+-- extract data as text
+-- in gui onteractive SQL it requires both "Show reults foa all statements" and "Show all result sets"
+
 drop proc if exists dba.extract_data_text;
 create or replace procedure dba.extract_data_text( owner varchar(256),tbl varchar(256),iq_export_dir varchar(1024),col_delimiter varchar(4),row_delimiter varchar(4) )
 begin

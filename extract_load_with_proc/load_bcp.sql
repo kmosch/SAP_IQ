@@ -1,6 +1,5 @@
 ﻿--extract bcp file from ASE this means that the last column has only row delimiters
 
-
 drop proc if exists "DBA"."col_list_bcp";
 create FUNCTION "DBA"."col_list_bcp" (@table_owner varchar(100),@table_name varchar(100))
 returns varchar(32000)
