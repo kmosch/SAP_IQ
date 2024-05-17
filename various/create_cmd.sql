@@ -1,3 +1,6 @@
+/*
+create a new IQ database and add the iq_main dbspace which is made the default dbspace
+*/
 create database '/sybdata/iq/kiq/kiq.db'
 blank padding on
 case respect
